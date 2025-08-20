@@ -1,0 +1,64 @@
+
+.ei-root {
+  width: 100%;
+
+}
+.ei-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #222;
+  padding-bottom: 0.5rem;
+}
+.ei-actions {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  margin-right: 3rem;
+}
+.ei-btn {
+  background: #fff;
+  color: #08702b;
+  border: 2px solid #08702b;
+  border-radius: 10px;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: background 0.18s, color 0.18s, transform 0.13s;
+}
+.ei-btn:hover {
+  background: #b2f5c8;
+  color: #05511e;
+  transform: translateY(-2px) scale(1.03);
+}
+.ei-card-area {
+  background: #ededed;
+  border-radius: 12px;
+  padding: 3rem 2.5rem;
+  margin-top: 2.5rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+}
+.ei-empty {
+  text-align: center;
+  color: #08702b;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+.ei-empty-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  color: #08702b;
+}
+.ei-empty-desc {
+  font-size: 1.05rem;
+  color: #555;
+}
