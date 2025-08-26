@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import UserProfilePlaceholder from './UserProfilePlaceholder';
-import './SideMenu.css';
+import '../styles/SideMenu.css';
 
 const menuItems = [
   { label: 'Home', to: '/home' },

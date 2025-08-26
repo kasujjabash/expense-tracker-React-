@@ -1,5 +1,5 @@
 import React from 'react';
-import './UserProfilePlaceholder.css';
+import '../styles/UserProfilePlaceholder.css';
 
 const UserProfilePlaceholder = () => (
   <div className="user-profile-placeholder">

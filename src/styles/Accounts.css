@@ -1,0 +1,82 @@
+.accounts-root {
+  /* max-width: 800px; */
+  margin: 2.5rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(8,112,43,0.09);
+  padding: 2.5rem 2rem 2.5rem 2rem;
+}
+.accounts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.accounts-add-btn {
+  background: #08702b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.7rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.accounts-add-btn:hover {
+  background: #0b8c36;
+  color: #e6ffe6;
+}
+.accounts-table-wrap {
+  overflow-x: auto;
+}
+.accounts-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+.accounts-table th, .accounts-table td {
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid #e6ffe6;
+  text-align: left;
+}
+.accounts-table th {
+  background: #f7f7f7;
+  color: #08702b;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+/* ...existing code... */
+.edit-btn {
+  background: #e6ffe6;
+  color: #08702b;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.edit-btn:hover {
+  background: #d2f5d2;
+}
+
+.delete-btn {
+  background: #ffeaea;
+  color: #b30000;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.delete-btn:hover {
+  background: #ffcccc;
+  color: #fff;
+}
+  /* background: #b2f5c8;
+  color: #05511e;
+} */

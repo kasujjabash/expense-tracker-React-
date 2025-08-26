@@ -2,7 +2,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import SideMenu from './components/SideMenu';
-import AppRoutes from './routes/AppRoutes';
+import AppRoutes from './components/AppRoutes';
 import './AppLayout.css';
 
 const AppLayout = () => {
