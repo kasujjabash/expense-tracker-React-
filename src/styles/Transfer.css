@@ -1,0 +1,44 @@
+/* Transfer form styles */
+.transfer-form-container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0001;
+}
+.transfer-form-container h2 {
+  margin-bottom: 1.5rem;
+}
+.transfer-form-container form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+.transfer-form-container select,
+.transfer-form-container input[type="number"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.transfer-form-container button[type="submit"] {
+  background: #08702b;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+.transfer-form-container button[type="submit"]:hover {
+  background: #065a22;
+}
+.transfer-form-container .transfer-message {
+  margin-top: 12px;
+  font-weight: 500;
+}

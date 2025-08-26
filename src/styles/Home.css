@@ -1,0 +1,205 @@
+.home-card-area.home-card-cards {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: stretch;
+  margin-top: 3.5rem;
+  margin-bottom: 2.5rem;
+}
+.home-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+  padding: 2.2rem 2rem 2.5rem 2rem;
+  min-width: 260px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.2rem;
+  transition: box-shadow 0.18s;
+}
+.home-card:hover {
+  box-shadow: 0 8px 32px rgba(8,112,43,0.13);
+}
+.home-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #08702b;
+  margin-bottom: 0.2rem;
+  text-align: center;
+}
+.home-card-desc {
+  font-size: 1.05rem;
+  color: #444;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.home-intro-text {
+  text-align: center;
+  margin-bottom: 2.2rem;
+}
+.home-intro-text h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #08702b;
+}
+.home-intro-text p {
+  font-size: 1.08rem;
+  color: #444;
+  margin: 0 auto 0.5rem auto;
+  max-width: 500px;
+}
+.home-btns-area {
+  display: flex;
+  gap: 2.5rem;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.home-btn-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 220px;
+}
+.home-btn-desc {
+  font-size: 0.98rem;
+  color: #555;
+  text-align: center;
+  margin-top: 0.3rem;
+  line-height: 1.4;
+}
+.home-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.home-table th, .home-table td {
+  padding: 0.85rem 1.1rem;
+  text-align: left;
+  font-size: 1.05rem;
+}
+.home-table th {
+  background: #f3f3f3;
+  color: #08702b;
+  font-weight: 700;
+  border-bottom: 2px solid #e0e0e0;
+}
+.home-table tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s;
+}
+.home-table tr:last-child {
+  border-bottom: none;
+}
+.home-table td {
+  color: #222;
+}
+.home-table tr.row-income {
+  background: #e8f7ee;
+}
+.home-table tr.row-expense {
+  background: #fff2f2;
+}
+.home-table tr:hover {
+  background: #f5faff;
+}
+.home-section {
+  margin-bottom: 2.5rem;
+}
+.home-error-msg {
+  color: #b30000;
+  background: #ffeaea;
+  border-radius: 6px;
+  padding: 0.7rem 1.2rem;
+  margin-top: 1.2rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  box-shadow: 0 1px 4px rgba(179,0,0,0.04);
+}
+.home-account-form-area {
+  margin: 2.5rem auto 1.5rem auto;
+  background: #f7f7f7;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px rgba(8,112,43,0.06);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  /* max-width: 500px; */
+}
+
+.home-root {
+  width: 100%;
+}
+.home-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #222;
+  padding-bottom: 0.5rem;
+}
+.home-card-area {
+  /* background: #ededed; */
+  border-radius: 8px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  gap: 10rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem;
+  /* max-width: 600px; */
+  margin-left: auto;
+  margin-right: auto;
+}
+.home-card-center {
+  justify-content: center;
+}
+.home-action-btn {
+  background: #08702b;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 2.2rem 2.8rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, transform 0.13s;
+  min-width: 180px;
+  margin: 0 0.5rem;
+}
+.home-action-btn:hover {
+  background: #0b8c36;
+  color: #e6ffe6;
+  transform: translateY(-2px) scale(1.03);
+}
+.home-list-area {
+  margin: 2.5rem auto 0 auto;
+  /* max-width: 600px; */
+  background: #f8f8f8;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.home-list-area h4 {
+  margin: 1.2rem 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #08702b;
+}
+.home-list-area ul {
+  margin: 0 0 1.2rem 0;
+  padding: 0 0 0 1.2rem;
+  color: #222;
+}
+.home-list-area li {
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
