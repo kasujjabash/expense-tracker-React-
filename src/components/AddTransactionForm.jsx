@@ -23,7 +23,10 @@ const AddTransactionForm = ({ onClose, onAdd, accounts = [], categories = [], fo
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!desc.trim() || !amount || !account) return;
-    onAdd({ desc, amount: parseFloat(amount), type, account, category });
+    // Add today's date in YYYY-MM-DD format if not present
+    const today = new Date();
+    const date = today.toISOString().slice(0, 10);
+    onAdd({ desc, amount: parseFloat(amount), type, account, category, date });
     onClose();
   };
 

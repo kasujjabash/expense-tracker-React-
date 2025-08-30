@@ -1,13 +1,15 @@
 
+
 import React, { useState, useEffect } from 'react';
 import AccountForm from '../components/AccountForm';
 import '../styles/Accounts.css';
 
-
 const ACCOUNTS_KEY = 'expense-tracker-accounts';
+const TRANSACTIONS_KEY = 'expense-tracker-transactions';
 
 const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editIdx, setEditIdx] = useState(null);
 
@@ -16,6 +18,8 @@ const Accounts = () => {
     const load = () => {
       const stored = localStorage.getItem(ACCOUNTS_KEY);
       if (stored) setAccounts(JSON.parse(stored));
+      const storedTx = localStorage.getItem(TRANSACTIONS_KEY);
+      if (storedTx) setTransactions(JSON.parse(storedTx));
     };
     load();
     window.addEventListener('storage', load);
@@ -70,7 +74,8 @@ const Accounts = () => {
           <thead>
             <tr>
               <th>Account Name</th>
-              <th>Amount</th>
+              <th>Amount Deposited</th>
+              <th>Balance</th>
               <th>Account Type</th>
               <th>Edit</th>
               <th>Delete</th>
@@ -78,17 +83,24 @@ const Accounts = () => {
           </thead>
           <tbody>
             {accounts.length === 0 && (
-              <tr><td colSpan={5} style={{textAlign:'center', color:'#888'}}>No accounts yet.</td></tr>
+              <tr><td colSpan={6} style={{textAlign:'center', color:'#888'}}>No accounts yet.</td></tr>
             )}
-            {accounts.map((acc, i) => (
-              <tr key={i}>
-                <td>{acc.name}</td>
-                <td>{acc.amount}</td>
-                <td>{acc.type}</td>
-                <td><button className="edit-btn" onClick={() => handleEdit(i)}>Edit</button></td>
-                <td><button className="delete-btn" onClick={() => handleDelete(i)} style={{color:'#b30000'}}>Delete</button></td>
-              </tr>
-            ))}
+            {accounts.map((acc, i) => {
+              const initial = parseFloat(acc.amount) || 0;
+              const spent = transactions.filter(t => t.account === acc.name && t.type === 'Expense').reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+              const added = transactions.filter(t => t.account === acc.name && t.type === 'Income').reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+              const balance = initial - spent + added;
+              return (
+                <tr key={i}>
+                  <td>{acc.name}</td>
+                  <td>{initial.toFixed(2)}</td>
+                  <td style={{ color: balance < initial * 0.2 ? '#b30000' : '#08702b', fontWeight: 600 }}>{balance.toFixed(2)}</td>
+                  <td>{acc.type}</td>
+                  <td><button className="edit-btn" onClick={() => handleEdit(i)}>Edit</button></td>
+                  <td><button className="delete-btn" onClick={() => handleDelete(i)} style={{color:'#b30000'}}>Delete</button></td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

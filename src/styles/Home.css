@@ -1,3 +1,50 @@
+/* Green button style for Home cards, matching Expense & Income screen */
+.home-action-btn-green {
+  background: #08702b !important;
+  color: #fff !important;
+  border: 2px solid #08702b !important;
+  box-shadow: 0 2px 8px rgba(8,112,43,0.10);
+}
+.home-action-btn-green:hover {
+  background: #0b8c36 !important;
+  color: #e6ffe6 !important;
+  border: 2px solid #0b8c36 !important;
+}
+/* Filter and search bar styles */
+.home-filter-bar {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 1.5rem 0 2rem 0;
+}
+.home-search-input, .home-date-input {
+  padding: 0.7rem 1.1rem;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  outline: none;
+  transition: border 0.15s;
+  background: #fff;
+}
+.home-search-input:focus, .home-date-input:focus {
+  border: 1.5px solid #08702b;
+}
+.home-clear-btn {
+  background: #e0e0e0;
+  color: #08702b;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.home-clear-btn:hover {
+  background: #08702b;
+  color: #fff;
+}
 .home-card-area.home-card-cards {
   display: flex;
   gap: 2.5rem;
@@ -162,23 +209,24 @@
   justify-content: center;
 }
 .home-action-btn {
-  background: #08702b;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 2.2rem 2.8rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: #fff;
+  color: #08702b;
+  border: 2px solid #08702b;
+  border-radius: 8px;
+  padding: 0.6rem 1.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: none;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s, transform 0.13s;
-  min-width: 180px;
-  margin: 0 0.5rem;
+  transition: background 0.18s, color 0.18s, border 0.18s, transform 0.13s;
+  min-width: 110px;
+  margin: 0 0.3rem;
 }
 .home-action-btn:hover {
-  background: #0b8c36;
-  color: #e6ffe6;
-  transform: translateY(-2px) scale(1.03);
+  background: #08702b;
+  color: #fff;
+  border: 2px solid #08702b;
+  transform: translateY(-2px) scale(1.04);
 }
 .home-list-area {
   margin: 2.5rem auto 0 auto;

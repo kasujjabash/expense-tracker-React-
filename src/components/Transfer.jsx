@@ -44,7 +44,7 @@ const Transfer = () => {
     });
     setAccounts(newAccounts);
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(newAccounts));
-    setMessage(`Transferred $${amt.toFixed(2)} from ${from} to ${to}.`);
+    setMessage(`Transferred Ugx ${amt.toFixed(2)} from ${from} to ${to}.`);
     setAmount('');
   };
 

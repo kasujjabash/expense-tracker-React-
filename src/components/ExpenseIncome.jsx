@@ -13,16 +13,38 @@ const ExpenseIncome = () => {
   const [transactions, setTransactions] = useState([]);
   const [txError, setTxError] = useState('');
 
+  // Helper to save transactions to state and localStorage
+  const saveTransactions = (newTxs) => {
+    setTransactions(newTxs);
+    localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(newTxs));
+  };
+
   useEffect(() => {
     const load = () => {
-      const storedAcc = localStorage.getItem(ACCOUNTS_KEY);
-      if (storedAcc) setAccounts(JSON.parse(storedAcc));
-      const storedTx = localStorage.getItem(TRANSACTIONS_KEY);
-      if (storedTx) setTransactions(JSON.parse(storedTx));
+      try {
+        const storedAcc = localStorage.getItem(ACCOUNTS_KEY);
+        if (storedAcc) setAccounts(JSON.parse(storedAcc));
+        const storedTx = localStorage.getItem(TRANSACTIONS_KEY);
+        if (storedTx) {
+          const parsed = JSON.parse(storedTx);
+          setTransactions(Array.isArray(parsed) ? parsed : []);
+        } else {
+          setTransactions([]);
+        }
+      } catch (e) {
+        setTransactions([]);
+      }
     };
     load();
     window.addEventListener('storage', load);
-    return () => window.removeEventListener('storage', load);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') load();
+    };
+    window.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      window.removeEventListener('storage', load);
+      window.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   useEffect(() => {
@@ -30,9 +52,12 @@ const ExpenseIncome = () => {
   }, [transactions]);
 
   const handleAddTransaction = (tx) => {
-    const newTx = [...transactions, tx];
-    setTransactions(newTx);
-    localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(newTx));
+    // Always add today's date if not present
+    const today = new Date();
+    const date = tx.date || today.toISOString().slice(0, 10);
+    const txWithDate = { ...tx, date };
+    const newTx = [...transactions, txWithDate];
+    saveTransactions(newTx);
     window.dispatchEvent(new Event('storage'));
     setShowForm(null);
   };
@@ -63,20 +88,43 @@ const ExpenseIncome = () => {
         />
       )}
       <div className="ei-card-area">
-        {transactions.length === 0 ? (
-          <div className="ei-empty">
-            <div className="ei-empty-title">You have no transactions</div>
-            <div className="ei-empty-desc">You haven't added any transactions. Tap the buttons above to start tracking your spending!</div>
-          </div>
-        ) : (
-          <ul className="ei-tx-list">
-            {transactions.map((t, i) => (
-              <li key={i} className={t.type === 'Income' ? 'income' : 'expense'}>
-                <span>{t.desc}</span> — <span>{t.amount}</span> <span>({t.type})</span> {t.account && <span>- {t.account}</span>}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="ei-table-area">
+          <table className="home-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Account</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center', color: '#888' }}>No transactions yet.</td>
+                </tr>
+              ) : (
+                transactions.map((t, i) => (
+                  <tr key={i} className={t.type === 'Income' ? 'row-income' : 'row-expense'}>
+                    <td>{t.date}</td>
+                    <td>{t.desc}</td>
+                    <td style={{color: t.type === 'Expense' ? '#b30000' : '#08702b', fontWeight: 600}}>{parseFloat(t.amount).toFixed(2)}</td>
+                    <td>{t.type}</td>
+                    <td>{t.account}</td>
+                    <td>{t.category ? (
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ width: 14, height: 14, background: t.category.color, borderRadius: '50%', display: 'inline-block' }}></span>
+                        <span>{t.category.name}</span>
+                      </span>
+                    ) : '-'}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

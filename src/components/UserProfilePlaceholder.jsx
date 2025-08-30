@@ -4,7 +4,9 @@ import '../styles/UserProfilePlaceholder.css';
 const UserProfilePlaceholder = () => (
   <div className="user-profile-placeholder">
     <div className="user-avatar" />
-    <div className="user-bar" />
+        <p>Bashir Kasujja</p>
+
+    {/* <div className="user-bar" /> */}
   </div>
 );
 
