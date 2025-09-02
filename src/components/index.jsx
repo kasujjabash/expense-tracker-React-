@@ -2,13 +2,13 @@ import React from 'react';
 import '../styles/Landing.css';
 
 
-const Landing = () => (
+const Index = () => (
   <div className="landing-root">
     <header className="landing-header">
   <div className="landing-logo">Vault Path <span style={{fontWeight:400}}>| Expense Tracker</span></div>
       <div className="landing-header-actions">
-        <a href="#login" className="landing-header-btn">Login</a>
-        <a href="#create-account" className="landing-header-btn primary">Create Account</a>
+        <a href="/login" className="landing-header-btn">Login</a>
+        <a href="/signup" className="landing-header-btn primary">Create Account</a>
       </div>
     </header>
     <div className="landing-hero">
@@ -20,7 +20,7 @@ const Landing = () => (
         <p className="landing-desc" style={{marginTop: '1rem', fontWeight: 400, color: '#333'}}>
           Vault Path is your personal finance companion. Effortlessly track expenses and income, manage all your accounts in one place, and gain insights into your spending habits. With a modern, intuitive interface and real-time data sync, you can take control of your financial journey—anytime, anywhere.
         </p>
-        <a href="/home" className="landing-btn">Get Started</a>
+  <a href="/signup" className="landing-btn">Get Started</a>
       </div>
       {/* <div className="landing-illustration">
         <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,4 +48,4 @@ const Landing = () => (
   </div>
 );
 
-export default Landing;
+export default Index;

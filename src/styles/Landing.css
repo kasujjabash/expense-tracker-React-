@@ -1,3 +1,6 @@
+body, html, .landing-root {
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
 /* Testimonials Section */
 .landing-testimonials {
   margin: 4.5rem auto 0 auto;

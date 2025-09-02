@@ -4,6 +4,8 @@ import AccountForm from '../components/AccountForm';
 import AddTransactionForm from '../components/AddTransactionForm';
 import CategoryForm from '../components/CategoryForm';
 import '../styles/Home.css';
+import Chart from './Chart';
+import Graph from './Graph';
 
 const ACCOUNTS_KEY = 'expense-tracker-accounts';
 const TRANSACTIONS_KEY = 'expense-tracker-transactions';
@@ -23,11 +25,25 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState('');
 
-  // Filter and search transactions
+  // Filter and search transactions for current month
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
   const filteredTransactions = transactions.filter(t => {
     const matchesSearch = t.desc?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesDate = dateFilter ? t.date === dateFilter : true;
-    return matchesSearch && matchesDate;
+    // Only include transactions from current month
+    const txDate = t.date ? new Date(t.date) : null;
+    const matchesMonth = txDate && txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
+    return matchesSearch && matchesDate && matchesMonth;
+  });
+  // Sort by date descending
+  const sortedTransactions = [...filteredTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Data for chart/graph: all current month transactions
+  const chartData = transactions.filter(t => {
+    const txDate = t.date ? new Date(t.date) : null;
+    return txDate && txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
   });
 
   // Calculate total balance and total spent
@@ -40,8 +56,17 @@ const Home = () => {
   // Total spent: sum all expenses, even for deleted accounts
   const totalSpent = transactions.filter(t => t.type === 'Expense').reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount, add default categories if none
   useEffect(() => {
+    const defaultCategories = [
+      { name: 'Food', color: '#e57373' },
+      { name: 'Transport', color: '#64b5f6' },
+      { name: 'Shopping', color: '#81c784' },
+      { name: 'Bills', color: '#ffd54f' },
+      { name: 'Health', color: '#ba68c8' },
+      { name: 'Salary', color: '#08702b' },
+      { name: 'Other', color: '#90a4ae' },
+    ];
     const loadData = () => {
       // Load accounts
       const storedAccounts = localStorage.getItem(ACCOUNTS_KEY);
@@ -51,7 +76,14 @@ const Home = () => {
       if (storedTransactions) setTransactions(JSON.parse(storedTransactions));
       // Load categories
       const storedCategories = localStorage.getItem(CATEGORIES_KEY);
-      if (storedCategories) setCategories(JSON.parse(storedCategories));
+      if (storedCategories) {
+        const cats = JSON.parse(storedCategories);
+        setCategories(cats.length > 0 ? cats : defaultCategories);
+        if (cats.length === 0) localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+      } else {
+        setCategories(defaultCategories);
+        localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+      }
     };
     loadData();
     window.addEventListener('storage', loadData);
@@ -89,32 +121,34 @@ const Home = () => {
     }
   }, [accounts]);
 
-  // Calculate balances and warnings
-  useEffect(() => {
-    if (accounts.length === 0 || transactions.length === 0) return;
 
-    let warning = false;
-    let msg = '';
-    
-    accounts.forEach(acc => {
+  // Per-account warning state: [{name, type: 'empty'|'low', closed: false}]
+  const [accountWarnings, setAccountWarnings] = useState([]);
+  useEffect(() => {
+    if (accounts.length === 0) {
+      setAccountWarnings([]);
+      return;
+    }
+    const newWarnings = accounts.map(acc => {
       const initial = parseFloat(acc.amount) || 0;
-      const spent = transactions
-        .filter(t => t.account === acc.name && t.type === 'Expense')
-        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
-      const added = transactions
-        .filter(t => t.account === acc.name && t.type === 'Income')
-        .reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+      const spent = transactions.filter(t => t.account === acc.name && t.type === 'Expense').reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
+      const added = transactions.filter(t => t.account === acc.name && t.type === 'Income').reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
       const current = initial - spent + added;
-      
-      if (initial > 0 && current / initial <= 0.2) {
-        warning = true;
-        msg = `Warning: Your account "${acc.name}" is below 20% of its initial balance. Add money soon!`;
+      if (current <= 0) {
+        return { name: acc.name, type: 'empty', closed: false };
+      } else if (initial > 0 && current / initial <= 0.2) {
+        return { name: acc.name, type: 'low', closed: false };
+      } else {
+        return null;
       }
-    });
-    
-    setShowWarning(warning);
-    setWarningMsg(msg);
+    }).filter(Boolean);
+    setAccountWarnings(newWarnings);
   }, [transactions, accounts]);
+
+  // Handler to close a specific warning
+  const closeAccountWarning = (name, type) => {
+    setAccountWarnings(warnings => warnings.map(w => (w.name === name && w.type === type) ? { ...w, closed: true } : w));
+  };
 
   const handleAddCategory = (newCategory) => {
     console.log('[Home] Adding new category:', newCategory);
@@ -183,6 +217,44 @@ const Home = () => {
 
   return (
     <div className="home-root">
+      {/* Warning Section - always visible if triggered, above summary bar */}
+      {accountWarnings.map(warning => !warning.closed && (
+        <div key={warning.name + warning.type} style={{
+          position: 'relative',
+          background: warning.type === 'empty' ? '#ffcccc' : '#fff7b2',
+          color: warning.type === 'empty' ? '#b30000' : '#b28500',
+          border: `2px solid ${warning.type === 'empty' ? '#b30000' : '#b28500'}`,
+          borderRadius: 8,
+          padding: '1rem 2.5rem 1rem 1.5rem',
+          margin: '1.5rem auto 1.5rem auto',
+          maxWidth: 600,
+          fontWeight: 600,
+          fontSize: '1.08rem',
+          textAlign: 'center',
+          boxShadow: warning.type === 'empty' ? '0 2px 8px #ffcccc88' : '0 2px 8px #fff7b288',
+        }}>
+          {warning.type === 'empty'
+            ? `Alert: Your account "${warning.name}" is empty! Please add money to continue using this account.`
+            : `Warning: Your account "${warning.name}" is below 20% of its initial balance. Add money soon!`}
+          <button
+            onClick={() => closeAccountWarning(warning.name, warning.type)}
+            style={{
+              position: 'absolute',
+              right: 12,
+              top: 10,
+              background: 'transparent',
+              border: 'none',
+              color: warning.type === 'empty' ? '#b30000' : '#b28500',
+              fontWeight: 700,
+              fontSize: 20,
+              cursor: 'pointer',
+              lineHeight: 1,
+            }}
+            aria-label="Close warning"
+          >×</button>
+        </div>
+      ))}
+
       {/* Summary Section */}
       <div className="home-summary-bar" style={{
         display: 'flex',
@@ -276,12 +348,12 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {(filteredTransactions.length === 0) ? (
+              {(sortedTransactions.length === 0) ? (
                 <tr>
                   <td colSpan="6" style={{ textAlign: 'center', color: '#888' }}>No transactions yet.</td>
                 </tr>
               ) : (
-                filteredTransactions.slice(0, 5).map((t, i) => (
+                sortedTransactions.slice(0, 5).map((t, i) => (
                   <tr key={`${t.date}-${t.desc}-${i}`} className={t.type === 'Income' ? 'row-income' : 'row-expense'}>
                     <td>{t.date}</td>
                     <td>{t.desc}</td>
@@ -303,11 +375,66 @@ const Home = () => {
               )}
             </tbody>
           </table>
-          {filteredTransactions.length > 5 && (
+          {sortedTransactions.length > 5 && (
             <div style={{ textAlign: 'center', marginTop: '1rem' }}>
               <a href="/expense-income" className="home-view-all-btn">View all transactions</a>
             </div>
           )}
+          {/* Chart and Graph Section */}
+          <div className="home-chart-area" style={{
+            marginTop: '2.5rem',
+            padding: '2.5rem 2rem 2rem 2rem',
+            borderRadius: 18,
+            maxWidth: 1200,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}>
+            <h3 style={{
+              textAlign: 'center',
+              fontWeight: 700,
+              fontSize: '1.45rem',
+              letterSpacing: 0.2,
+              color: '#1a2a3a',
+              marginBottom: '2.2rem',
+              color: '#08702b',
+            }}>
+             Monthly Spending Summary
+            </h3>
+            <div style={{
+              display: 'flex',
+              gap: '3.5rem',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+            }}>
+              <div style={{
+                width: 420,
+                background: '#fff',
+                borderRadius: 14,
+                boxShadow: '0 2px 12px 0 rgba(60,60,120,0.07)',
+                padding: '1.5rem 1.2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                minHeight: 380,
+              }}>
+                <Chart data={chartData} title="Expenses by Category (Pie)" categories={categories} />
+              </div>
+              <div style={{
+                width: 540,
+                background: '#fff',
+                borderRadius: 14,
+                boxShadow: '0 2px 12px 0 rgba(60,60,120,0.07)',
+                padding: '1.5rem 1.2rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                minHeight: 380,
+              }}>
+                <Graph data={chartData} title="Income vs Expenses (Line)" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

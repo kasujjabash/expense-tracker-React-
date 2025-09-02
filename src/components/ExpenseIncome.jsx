@@ -5,12 +5,14 @@ import AddTransactionForm from '../components/AddTransactionForm';
 import '../styles/ExpenseIncome.css';
 
 const ACCOUNTS_KEY = 'expense-tracker-accounts';
-const TRANSACTIONS_KEY = 'expense-tracker-transactions';
+const TRANSACTIONS_KEY = 'expense-tracker-expenseincome-transactions';
+const CATEGORIES_KEY = 'expense-tracker-categories';
 
 const ExpenseIncome = () => {
   const [showForm, setShowForm] = useState(null); // 'income' | 'expense' | null
   const [accounts, setAccounts] = useState([]);
   const [transactions, setTransactions] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [txError, setTxError] = useState('');
 
   // Helper to save transactions to state and localStorage
@@ -20,6 +22,15 @@ const ExpenseIncome = () => {
   };
 
   useEffect(() => {
+    const defaultCategories = [
+      { name: 'Food', color: '#e57373' },
+      { name: 'Transport', color: '#64b5f6' },
+      { name: 'Shopping', color: '#81c784' },
+      { name: 'Bills', color: '#ffd54f' },
+      { name: 'Health', color: '#ba68c8' },
+      { name: 'Salary', color: '#08702b' },
+      { name: 'Other', color: '#90a4ae' },
+    ];
     const load = () => {
       try {
         const storedAcc = localStorage.getItem(ACCOUNTS_KEY);
@@ -31,8 +42,19 @@ const ExpenseIncome = () => {
         } else {
           setTransactions([]);
         }
+        // Categories
+        const storedCategories = localStorage.getItem(CATEGORIES_KEY);
+        if (storedCategories) {
+          const cats = JSON.parse(storedCategories);
+          setCategories(cats.length > 0 ? cats : defaultCategories);
+          if (cats.length === 0) localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+        } else {
+          setCategories(defaultCategories);
+          localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+        }
       } catch (e) {
         setTransactions([]);
+        setCategories(defaultCategories);
       }
     };
     load();
@@ -73,7 +95,6 @@ const ExpenseIncome = () => {
 
   return (
     <div className="ei-root">
-      <h2 className="ei-title">Expense & Income</h2>
       <div className="ei-actions">
         <button className="ei-btn" onClick={() => handleShowForm('income')}>Add New Income</button>
         <button className="ei-btn" onClick={() => handleShowForm('expense')}>Add New Expense</button>
@@ -84,6 +105,7 @@ const ExpenseIncome = () => {
           onClose={() => setShowForm(null)}
           onAdd={handleAddTransaction}
           accounts={accounts}
+          categories={categories}
           forceType={showForm === 'income' ? 'Income' : 'Expense'}
         />
       )}

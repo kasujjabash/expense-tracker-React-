@@ -251,3 +251,8 @@
   margin-bottom: 0.3rem;
   font-size: 1rem;
 }
+.home-view-all-btn{
+  text-decoration: none;
+  color: #08702b;
+  font-weight: bold;
+}

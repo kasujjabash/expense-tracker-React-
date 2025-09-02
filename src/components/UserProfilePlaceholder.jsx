@@ -1,13 +1,18 @@
 import React from 'react';
 import '../styles/UserProfilePlaceholder.css';
 
-const UserProfilePlaceholder = () => (
-  <div className="user-profile-placeholder">
-    <div className="user-avatar" />
-        <p>Bashir Kasujja</p>
-
-    {/* <div className="user-bar" /> */}
-  </div>
-);
+const UserProfilePlaceholder = () => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return (
+    <div className="user-profile-placeholder">
+      {user.image ? (
+        <img src={user.image} alt="Profile" className="user-avatar" style={{ width: 48, height: 48, borderRadius: '50%' }} />
+      ) : (
+        <div className="user-avatar" />
+      )}
+      <p style={{ fontWeight: 600, marginTop: 8 }}>{user.name || 'User'}</p>
+    </div>
+  );
+};
 
 export default UserProfilePlaceholder;

@@ -1,25 +1,61 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-
-
-import Landing from './Landing';
+import Landing from '.';
 import Home from './Home';
 import ExpenseIncome from './ExpenseIncome';
 import Reports from './Reports';
 import Transfer from './Transfer';
 import Accounts from './Accounts';
 import Logout from './Logout';
+import SignUpPage from './SignUpPage';
+import LoginPage from './LoginPage';
 
+// Helper to check if user is logged in
+const isLoggedIn = () => {
+  const user = localStorage.getItem('user');
+  return !!user;
+};
+
+// Protected route wrapper
+const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
+  if (!isLoggedIn()) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  return children;
+};
 
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Landing />} />
-    <Route path="/home" element={<Home />} />
-    <Route path="/expense-income" element={<ExpenseIncome />} />
-    <Route path="/reports" element={<Reports />} />
-    <Route path="/transfer" element={<Transfer />} />
-    <Route path="/accounts" element={<Accounts />} />
+    <Route path="/signup" element={<SignUpPage />} />
+    <Route path="/login" element={<LoginPage />} />
+    <Route path="/home" element={
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    } />
+    <Route path="/expense-income" element={
+      <ProtectedRoute>
+        <ExpenseIncome />
+      </ProtectedRoute>
+    } />
+    <Route path="/reports" element={
+      <ProtectedRoute>
+        <Reports />
+      </ProtectedRoute>
+    } />
+    <Route path="/transfer" element={
+      <ProtectedRoute>
+        <Transfer />
+      </ProtectedRoute>
+    } />
+    <Route path="/accounts" element={
+      <ProtectedRoute>
+        <Accounts />
+      </ProtectedRoute>
+    } />
     <Route path="/logout" element={<Logout />} />
   </Routes>
 );
