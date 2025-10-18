@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { setUserAuth } from '../services/localStorage';
 import '../styles/SignUpForm.css';
 
 const SignUpForm = () => {
@@ -34,7 +35,7 @@ const SignUpForm = () => {
     }
     // Save to localStorage
     const userData = { name, email, password, image };
-    localStorage.setItem('user', JSON.stringify(userData));
+    setUserAuth(userData);
     setError('');
     setSuccess(true);
   };

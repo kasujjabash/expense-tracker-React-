@@ -3,20 +3,19 @@ import { useLocation } from 'react-router-dom';
 import AccountForm from '../components/AccountForm';
 import AddTransactionForm from '../components/AddTransactionForm';
 import CategoryForm from '../components/CategoryForm';
+import useTransactions from '../hooks/useTransactions';
+import { formatCurrency } from '../utils/currency';
+import { getAccounts, setAccounts as saveAccounts, getCategories, setCategories as saveCategories } from '../services/localStorage';
 import '../styles/Home.css';
 import Chart from './Chart';
 import Graph from './Graph';
 
-const ACCOUNTS_KEY = 'expense-tracker-accounts';
-const TRANSACTIONS_KEY = 'expense-tracker-transactions';
-const CATEGORIES_KEY = 'expense-tracker-categories';
-
 const Home = () => {
   const location = useLocation();
+  const { transactions, addTransaction } = useTransactions();
   const [showAccount, setShowAccount] = useState(false);
   const [showTransaction, setShowTransaction] = useState(false);
   const [accounts, setAccounts] = useState([]);
-  const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [showCategory, setShowCategory] = useState(false);
   const [txError, setTxError] = useState('');
@@ -69,20 +68,15 @@ const Home = () => {
     ];
     const loadData = () => {
       // Load accounts
-      const storedAccounts = localStorage.getItem(ACCOUNTS_KEY);
-      if (storedAccounts) setAccounts(JSON.parse(storedAccounts));
-      // Load transactions
-      const storedTransactions = localStorage.getItem(TRANSACTIONS_KEY);
-      if (storedTransactions) setTransactions(JSON.parse(storedTransactions));
+      const storedAccounts = getAccounts();
+      setAccounts(storedAccounts);
+      // Transactions are now managed by useTransactions hook
       // Load categories
-      const storedCategories = localStorage.getItem(CATEGORIES_KEY);
-      if (storedCategories) {
-        const cats = JSON.parse(storedCategories);
-        setCategories(cats.length > 0 ? cats : defaultCategories);
-        if (cats.length === 0) localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
-      } else {
+      const storedCategories = getCategories();
+      const cats = storedCategories.length > 0 ? storedCategories : defaultCategories;
+      setCategories(cats);
+      if (storedCategories.length === 0) {
         setCategories(defaultCategories);
-        localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
       }
     };
     loadData();
@@ -97,19 +91,13 @@ const Home = () => {
     };
   }, []);
 
-  // Save transactions to localStorage whenever transactions change
-  useEffect(() => {
-    if (transactions.length > 0) {
-      console.log('[Home] Saving transactions to localStorage:', transactions);
-      localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(transactions));
-    }
-  }, [transactions]);
+
 
   // Save categories to localStorage whenever categories change
   useEffect(() => {
     if (categories.length > 0) {
       console.log('[Home] Saving categories to localStorage:', categories);
-      localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+      saveCategories(categories);
     }
   }, [categories]);
 
@@ -117,7 +105,7 @@ const Home = () => {
   useEffect(() => {
     if (accounts.length > 0) {
       console.log('[Home] Saving accounts to localStorage:', accounts);
-      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+      saveAccounts(accounts);
     }
   }, [accounts]);
 
@@ -188,8 +176,7 @@ const Home = () => {
         // Optionally, update the account's amount if you want to persist the new balance
       }
     }
-    const updatedTransactions = [...transactions, txWithDate];
-    setTransactions(updatedTransactions);
+    addTransaction(txWithDate);
     setShowTransaction(false);
   };
 
@@ -264,8 +251,8 @@ const Home = () => {
         fontWeight: 600,
         fontSize: '1.15rem',
       }}>
-        <span>Total Balance: <span style={{ color: '#08702b' }}>{totalBalance.toFixed(2)}</span></span>
-        <span>Total Spent: <span style={{ color: '#b30000' }}>{totalSpent.toFixed(2)}</span></span>
+        <span>Total Balance: <span style={{ color: '#08702b' }}>{formatCurrency(totalBalance)}</span></span>
+        <span>Total Spent: <span style={{ color: '#b30000' }}>{formatCurrency(totalSpent)}</span></span>
       </div>
 
       <div className="home-actions-bar" style={{ 
@@ -358,7 +345,7 @@ const Home = () => {
                     <td>{t.date}</td>
                     <td>{t.desc}</td>
                     <td style={{ color: t.type === 'Expense' ? '#b30000' : '#08702b', fontWeight: 600 }}>
-                      {parseFloat(t.amount || 0).toFixed(2)}
+                      {formatCurrency(t.amount || 0)}
                     </td>
                     <td>{t.type}</td>
                     <td>{t.account}</td>

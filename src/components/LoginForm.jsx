@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserAuth } from '../services/localStorage';
 import '../styles/SignUpForm.css';
 
 const LoginForm = () => {
@@ -15,7 +16,7 @@ const LoginForm = () => {
       return;
     }
     // Check credentials
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = getUserAuth() || {};
     if (user.email === email && user.password === password) {
       setError('');
       navigate('/home');

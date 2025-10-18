@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { formatCurrency } from '../utils/currency';
 import '../styles/Transfer.css';
 
 const ACCOUNTS_KEY = 'expense-tracker-accounts';
@@ -44,7 +45,7 @@ const Transfer = () => {
     });
     setAccounts(newAccounts);
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(newAccounts));
-    setMessage(`Transferred Ugx ${amt.toFixed(2)} from ${from} to ${to}.`);
+    setMessage(`Transferred ${formatCurrency(amt)} from ${from} to ${to}.`);
     setAmount('');
   };
 

@@ -1,8 +1,9 @@
 import React from 'react';
+import { getUserAuth } from '../services/localStorage';
 import '../styles/UserProfilePlaceholder.css';
 
 const UserProfilePlaceholder = () => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = getUserAuth() || {};
   return (
     <div className="user-profile-placeholder">
       {user.image ? (

@@ -10,10 +10,11 @@ import Accounts from './Accounts';
 import Logout from './Logout';
 import SignUpPage from './SignUpPage';
 import LoginPage from './LoginPage';
+import { getUserAuth } from '../services/localStorage';
 
 // Helper to check if user is logged in
 const isLoggedIn = () => {
-  const user = localStorage.getItem('user');
+  const user = getUserAuth();
   return !!user;
 };
 

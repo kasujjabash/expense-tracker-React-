@@ -12,7 +12,7 @@ const AppLayout = () => {
   const isLogin = pathname === '/login';
   if (isLanding || isSignup || isLogin) {
     return (
-      <main className="main-content">
+      <main className="main-content-no-padding">
         <AppRoutes />
       </main>
     );

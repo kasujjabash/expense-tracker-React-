@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import AddTransactionForm from '../components/AddTransactionForm';
+import { formatCurrency } from '../utils/currency';
 import '../styles/ExpenseIncome.css';
 
 const ACCOUNTS_KEY = 'expense-tracker-accounts';
@@ -132,7 +133,7 @@ const ExpenseIncome = () => {
                   <tr key={i} className={t.type === 'Income' ? 'row-income' : 'row-expense'}>
                     <td>{t.date}</td>
                     <td>{t.desc}</td>
-                    <td style={{color: t.type === 'Expense' ? '#b30000' : '#08702b', fontWeight: 600}}>{parseFloat(t.amount).toFixed(2)}</td>
+                    <td style={{color: t.type === 'Expense' ? '#b30000' : '#08702b', fontWeight: 600}}>{formatCurrency(t.amount)}</td>
                     <td>{t.type}</td>
                     <td>{t.account}</td>
                     <td>{t.category ? (

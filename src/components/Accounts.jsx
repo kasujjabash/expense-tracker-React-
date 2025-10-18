@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import AccountForm from '../components/AccountForm';
+import { formatCurrency } from '../utils/currency';
 import '../styles/Accounts.css';
 
 const ACCOUNTS_KEY = 'expense-tracker-accounts';
@@ -93,8 +94,8 @@ const Accounts = () => {
               return (
                 <tr key={i}>
                   <td>{acc.name}</td>
-                  <td>{initial.toFixed(2)}</td>
-                  <td style={{ color: balance < initial * 0.2 ? '#b30000' : '#08702b', fontWeight: 600 }}>{balance.toFixed(2)}</td>
+                  <td>{formatCurrency(initial)}</td>
+                  <td style={{ color: balance < initial * 0.2 ? '#b30000' : '#08702b', fontWeight: 600 }}>{formatCurrency(balance)}</td>
                   <td>{acc.type}</td>
                   <td><button className="edit-btn" onClick={() => handleEdit(i)}>Edit</button></td>
                   <td><button className="delete-btn" onClick={() => handleDelete(i)} style={{color:'#b30000'}}>Delete</button></td>

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { clearUserAuth } from '../services/localStorage';
 
 const Logout = () => {
   const navigate = useNavigate();
   useEffect(() => {
     // Remove user from localStorage
-    localStorage.removeItem('user');
+    clearUserAuth();
     // Redirect to login page
     navigate('/login', { replace: true });
   }, [navigate]);
